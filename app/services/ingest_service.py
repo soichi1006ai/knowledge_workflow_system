@@ -3,7 +3,7 @@ from app.core.enums import CanonicalSourceType, InputSourceType
 
 class IngestService:
     @staticmethod
-    def normalize_source_type(input_source_type: InputSourceType) -> CanonicalSourceType:
+    def normalize_source_type(input_source_type: InputSourceType | str) -> CanonicalSourceType:
         mapping = {
             InputSourceType.TEXT: CanonicalSourceType.RAW_NOTE,
             InputSourceType.MARKDOWN: CanonicalSourceType.RAW_NOTE,
@@ -12,4 +12,5 @@ class IngestService:
             InputSourceType.CONVERSATION_SUMMARY: CanonicalSourceType.CONVERSATION_SUMMARY,
             InputSourceType.HYPOTHESIS: CanonicalSourceType.HYPOTHESIS,
         }
-        return mapping[input_source_type]
+        key = InputSourceType(input_source_type) if isinstance(input_source_type, str) else input_source_type
+        return mapping[key]
