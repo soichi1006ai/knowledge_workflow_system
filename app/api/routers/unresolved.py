@@ -7,24 +7,31 @@ from app.schemas.unresolved import (
     UnresolvedListItem,
     UnresolvedListResponse,
 )
+from app.services.vault_object_service import VaultObjectService
 
 router = APIRouter(prefix="/api/unresolved", tags=["unresolved"])
+vault_service = VaultObjectService()
 
 
 @router.get("", response_model=UnresolvedListResponse)
 def list_unresolved() -> UnresolvedListResponse:
-    return UnresolvedListResponse(
-        items=[
-            UnresolvedListItem(
-                question_id="uq_kos001",
-                question="What is the smallest lovable dashboard for daily use?",
-                status="open",
-                priority="high",
-                linked_project_id="prj_kos001",
-                created_at="2026-04-14",
+    objects = vault_service.list_objects("unresolved/active")
+    items = []
+    for fm in objects:
+        try:
+            items.append(
+                UnresolvedListItem(
+                    question_id=str(fm.get("question_id", "")),
+                    question=str(fm.get("question", fm.get("title", ""))),
+                    status=str(fm.get("status", "open")),
+                    priority=str(fm.get("priority", "medium")),
+                    linked_project_id=fm.get("linked_project_id") or None,
+                    created_at=fm.get("created_at") or None,
+                )
             )
-        ]
-    )
+        except Exception:
+            continue
+    return UnresolvedListResponse(items=items)
 
 
 @router.post("", response_model=UnresolvedCreateResponse)

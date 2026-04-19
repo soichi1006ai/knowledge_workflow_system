@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Tuple
 
 from app.core.enums import InputSourceType
 
@@ -16,10 +16,7 @@ class ExtractionService:
             return self._extract_docx(source_path)
 
         if detected_type == InputSourceType.SPREADSHEET:
-            return "", "needs-extraction"
-
-        if detected_type in {InputSourceType.IMAGE, InputSourceType.VIDEO, InputSourceType.ATTACHMENT_NOTE}:
-            return "", "metadata-only"
+            return self._extract_spreadsheet(source_path)
 
         return "", "metadata-only"
 
@@ -57,6 +54,32 @@ class ExtractionService:
             document = docx.Document(str(source_path))
             paragraphs = [p.text.strip() for p in document.paragraphs if p.text and p.text.strip()]
             joined = "\n\n".join(paragraphs).strip()
+            if joined:
+                return joined, "full-text"
+            return "", "metadata-only"
+        except Exception:
+            return "", "needs-extraction"
+
+    def _extract_spreadsheet(self, source_path: Path) -> Tuple[str, str]:
+        try:
+            import openpyxl
+        except Exception:
+            return "", "needs-extraction"
+
+        try:
+            wb = openpyxl.load_workbook(str(source_path), read_only=True, data_only=True)
+            parts = []
+            for sheet_name in wb.sheetnames:
+                ws = wb[sheet_name]
+                rows = []
+                for row in ws.iter_rows(values_only=True):
+                    cells = [str(c) if c is not None else "" for c in row]
+                    if any(c for c in cells):
+                        rows.append("\t".join(cells))
+                if rows:
+                    parts.append(f"## {sheet_name}\n" + "\n".join(rows))
+            wb.close()
+            joined = "\n\n".join(parts).strip()
             if joined:
                 return joined, "full-text"
             return "", "metadata-only"

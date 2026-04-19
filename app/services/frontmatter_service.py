@@ -1,24 +1,25 @@
-from typing import Dict, Tuple
+from typing import Any, Dict, Tuple
+
+import yaml
 
 
 class FrontmatterService:
-    def split(self, text: str) -> Tuple[Dict[str, str], str]:
+    def split(self, text: str) -> Tuple[Dict[str, Any], str]:
         if not text.startswith("---\n"):
             return {}, text
 
-        parts = text.split("\n---\n", 1)
-        if len(parts) != 2:
+        end = text.find("\n---\n", 4)
+        if end == -1:
             return {}, text
 
-        raw_frontmatter = parts[0][4:]
-        body = parts[1]
-        data: Dict[str, str] = {}
-        for line in raw_frontmatter.splitlines():
-            if not line.strip() or ":" not in line:
-                continue
-            key, value = line.split(":", 1)
-            cleaned = value.strip().strip('"')
-            if cleaned in {"null", "None", ""}:
-                cleaned = ""
-            data[key.strip()] = cleaned
+        raw_frontmatter = text[4:end]
+        body = text[end + 5:]
+
+        try:
+            data = yaml.safe_load(raw_frontmatter) or {}
+            if not isinstance(data, dict):
+                data = {}
+        except yaml.YAMLError:
+            data = {}
+
         return data, body

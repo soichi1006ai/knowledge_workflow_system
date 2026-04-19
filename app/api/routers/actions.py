@@ -1,26 +1,33 @@
 from fastapi import APIRouter
 
-from app.schemas.action import ActionCreateRequest, ActionCreateResponse, ActionListItem, ActionListResponse
 from app.schemas.common import ApiResponse
+from app.schemas.action import ActionCreateRequest, ActionCreateResponse, ActionListItem, ActionListResponse
+from app.services.vault_object_service import VaultObjectService
 
 router = APIRouter(prefix="/api/actions", tags=["actions"])
+vault_service = VaultObjectService()
 
 
 @router.get("", response_model=ActionListResponse)
 def list_actions() -> ActionListResponse:
-    return ActionListResponse(
-        items=[
-            ActionListItem(
-                action_id="act_kos001",
-                title="Implement initial raw -> query workflow",
-                status="open",
-                priority="high",
-                owner="Master S",
-                due_date="2026-04-20",
-                linked_project_id="prj_kos001",
+    objects = vault_service.list_objects("actions/open")
+    items = []
+    for fm in objects:
+        try:
+            items.append(
+                ActionListItem(
+                    action_id=str(fm.get("action_id", "")),
+                    title=str(fm.get("title", "")),
+                    status=str(fm.get("status", "open")),
+                    priority=str(fm.get("priority", "medium")),
+                    owner=fm.get("owner") or None,
+                    due_date=fm.get("due_date") or None,
+                    linked_project_id=fm.get("linked_project_id") or None,
+                )
             )
-        ]
-    )
+        except Exception:
+            continue
+    return ActionListResponse(items=items)
 
 
 @router.post("", response_model=ActionCreateResponse)
