@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import Field
 
 from app.schemas.common import ApiResponse, KOSBaseModel
@@ -7,9 +9,9 @@ class DashboardBucketItem(KOSBaseModel):
     id: str
     title: str
     item_type: str
-    priority: str | None = None
-    linked_project_id: str | None = None
-    note: str | None = None
+    priority: Optional[str] = None
+    linked_project_id: Optional[str] = None
+    note: Optional[str] = None
 
 
 class DashboardData(KOSBaseModel):

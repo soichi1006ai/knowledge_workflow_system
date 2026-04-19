@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import Field
 
 from app.schemas.common import ApiResponse, KOSBaseModel
@@ -7,9 +9,9 @@ class ReviewCandidate(KOSBaseModel):
     review_candidate_id: str
     target_page_id: str
     review_reason: str
-    stale_reason: str | None = None
+    stale_reason: Optional[str] = None
     detected_at: str
-    suggested_action: str | None = None
+    suggested_action: Optional[str] = None
 
 
 class ReviewHistoryItem(KOSBaseModel):

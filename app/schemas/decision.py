@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import Field
 
 from app.schemas.common import ApiResponse, KOSBaseModel
@@ -12,9 +14,9 @@ class DecisionListItem(KOSBaseModel):
     decision_id: str
     title: str
     status: str
-    linked_project_id: str | None = None
-    created_at: str | None = None
-    confirmed_at: str | None = None
+    linked_project_id: Optional[str] = None
+    created_at: Optional[str] = None
+    confirmed_at: Optional[str] = None
 
 
 class DecisionListResponse(ApiResponse):
@@ -23,12 +25,12 @@ class DecisionListResponse(ApiResponse):
 
 class DecisionCreateRequest(KOSBaseModel):
     title: str
-    linked_project_id: str | None = None
+    linked_project_id: Optional[str] = None
     linked_page_ids: list[str] = Field(default_factory=list)
     linked_source_ids: list[str] = Field(default_factory=list)
     context: str
     options: list[str] = Field(default_factory=list)
-    chosen_option: str | None = None
+    chosen_option: Optional[str] = None
     reason: str
     risks: list[str] = Field(default_factory=list)
     status: str = "draft"

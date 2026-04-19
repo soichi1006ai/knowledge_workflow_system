@@ -52,21 +52,51 @@ Inbox -> Ingest Preview -> Ingest Commit -> Knowledge Page -> Query -> Decision 
 ## Run locally
 ```bash
 cd knowledge_workflow_system
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 bash scripts/run_dev.sh
 ```
 
 Then open:
 - `http://127.0.0.1:8000/docs`
 
-## Current status
-This repository currently includes:
-- initial FastAPI skeleton
-- initial sample vault content
-- workflow-first design notes
+## Current implemented flow
+This repository now supports a working MVP slice:
+- inbox folder import
+- raw markdown generation
+- attachment preservation
+- imported-file archiving
+- ingest preview based on imported raw content
+- ingest commit to either create a new page or merge into an existing page
+- source object generation during commit
+- decision, action, and unresolved generation during commit
+- sample vault execution path
+
+## Current API highlights
+- `POST /api/raw/inbox/import`
+- `POST /api/raw/{raw_id}/ingest-preview`
+- `POST /api/raw/{raw_id}/ingest-commit`
+- `GET /api/pages`
+- `POST /api/query`
+
+## Verification
+```bash
+source .venv/bin/activate
+python -m unittest tests/test_ingest_flow.py
+```
+
+## Current limitations
+- PDF extraction path exists but needs more real-file verification
+- XLSX extraction is not implemented yet
+- OCR for images is not implemented yet
+- video transcription is not implemented yet
+- generated decision, action, and unresolved records are still template-level and should become smarter
+- page merge logic is conservative and append-only
 
 ## Near-term priorities
-1. schema validation
-2. ingest preview and commit flow
-3. query minimum contract
-4. decision and action flow
-5. dashboard minimal
+1. strengthen PDF verification and extraction quality
+2. add spreadsheet extraction
+3. add OCR pipeline for images
+4. connect decision / action / unresolved generation
+5. improve merge quality and structured source linking

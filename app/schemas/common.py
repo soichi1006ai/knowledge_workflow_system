@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel, ConfigDict
 
 
@@ -12,4 +14,4 @@ class KOSBaseModel(BaseModel):
 
 class ApiResponse(KOSBaseModel):
     ok: bool = True
-    message: str | None = None
+    message: Optional[str] = None

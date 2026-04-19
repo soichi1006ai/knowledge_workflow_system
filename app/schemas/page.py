@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import Field
 
 from app.core.enums import PageConfidence, PageStatus, PageType
@@ -10,9 +12,9 @@ class PageSummary(KOSBaseModel):
     type: PageType
     status: PageStatus
     page_confidence: PageConfidence
-    linked_project_id: str | None = None
-    updated_at: str | None = None
-    review_due: str | None = None
+    linked_project_id: Optional[str] = None
+    updated_at: Optional[str] = None
+    review_due: Optional[str] = None
 
 
 class PageDocument(KOSBaseModel):

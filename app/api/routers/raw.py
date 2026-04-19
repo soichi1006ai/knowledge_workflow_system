@@ -1,6 +1,8 @@
 from fastapi import APIRouter
 
 from app.schemas.raw import (
+    InboxImportRequest,
+    InboxImportResponse,
     IngestCommitRequest,
     IngestCommitResponse,
     IngestPreviewRequest,
@@ -9,12 +11,14 @@ from app.schemas.raw import (
     RawCreateResponse,
     RawListResponse,
 )
+from app.services.inbox_service import InboxService
 from app.services.raw_service import RawService
 from app.workflows.ingest_commit_flow import IngestCommitFlow
 from app.workflows.ingest_preview_flow import IngestPreviewFlow
 
 router = APIRouter(prefix="/api/raw", tags=["raw"])
 raw_service = RawService()
+inbox_service = InboxService()
 ingest_preview_flow = IngestPreviewFlow()
 ingest_commit_flow = IngestCommitFlow()
 
@@ -27,6 +31,11 @@ def list_raw() -> RawListResponse:
 @router.post("", response_model=RawCreateResponse)
 def create_raw(payload: RawCreateRequest) -> RawCreateResponse:
     return raw_service.create_raw(payload)
+
+
+@router.post("/inbox/import", response_model=InboxImportResponse)
+def import_inbox(payload: InboxImportRequest) -> InboxImportResponse:
+    return inbox_service.import_inbox(payload)
 
 
 @router.post("/{raw_id}/ingest-preview", response_model=IngestPreviewResponse)

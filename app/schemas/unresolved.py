@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import Field
 
 from app.schemas.common import ApiResponse, KOSBaseModel
@@ -13,8 +15,8 @@ class UnresolvedListItem(KOSBaseModel):
     question: str
     status: str
     priority: str
-    linked_project_id: str | None = None
-    created_at: str | None = None
+    linked_project_id: Optional[str] = None
+    created_at: Optional[str] = None
 
 
 class UnresolvedListResponse(ApiResponse):
@@ -25,7 +27,7 @@ class UnresolvedCreateRequest(KOSBaseModel):
     question: str
     status: str = "open"
     priority: str = "medium"
-    linked_project_id: str | None = None
+    linked_project_id: Optional[str] = None
     linked_page_ids: list[str] = Field(default_factory=list)
     linked_source_ids: list[str] = Field(default_factory=list)
     why_unresolved: str

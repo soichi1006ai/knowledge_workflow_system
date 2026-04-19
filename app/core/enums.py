@@ -15,9 +15,22 @@ class PageStatus(str, Enum):
     STABLE = "stable"
 
 
+class PageConfidence(str, Enum):
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+
+
 class InputSourceType(str, Enum):
     TEXT = "text"
     MARKDOWN = "markdown"
+    PDF = "pdf"
+    DOCX = "docx"
+    CSV = "csv"
+    JSON = "json"
+    IMAGE = "image"
+    VIDEO = "video"
+    SPREADSHEET = "spreadsheet"
     URL = "url"
     ATTACHMENT_NOTE = "attachment-note"
     CONVERSATION_SUMMARY = "conversation-summary"

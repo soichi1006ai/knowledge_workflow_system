@@ -1,0 +1,2 @@
+Knowledge Workflow System should turn captured information into reusable knowledge, not just stored notes.
+It should support ingest, decision, action, and review.

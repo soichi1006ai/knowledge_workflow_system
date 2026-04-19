@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import Field
 
 from app.schemas.common import ApiResponse, KOSBaseModel
@@ -13,9 +15,9 @@ class ActionListItem(KOSBaseModel):
     title: str
     status: str
     priority: str
-    owner: str | None = None
-    due_date: str | None = None
-    linked_project_id: str | None = None
+    owner: Optional[str] = None
+    due_date: Optional[str] = None
+    linked_project_id: Optional[str] = None
 
 
 class ActionListResponse(ApiResponse):
@@ -26,10 +28,10 @@ class ActionCreateRequest(KOSBaseModel):
     title: str
     description: str
     priority: str = "medium"
-    owner: str | None = None
-    due_date: str | None = None
-    linked_project_id: str | None = None
-    linked_decision_id: str | None = None
+    owner: Optional[str] = None
+    due_date: Optional[str] = None
+    linked_project_id: Optional[str] = None
+    linked_decision_id: Optional[str] = None
     linked_page_ids: list[str] = Field(default_factory=list)
 
 

@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import Field
 
 from app.core.enums import QueryMode
@@ -7,7 +9,7 @@ from app.schemas.common import ApiResponse, KOSBaseModel
 class QueryRequest(KOSBaseModel):
     query: str
     mode: QueryMode
-    active_project_id: str | None = None
+    active_project_id: Optional[str] = None
     include_archived: bool = False
     max_results: int = 10
 

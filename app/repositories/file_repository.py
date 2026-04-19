@@ -12,3 +12,6 @@ class FileRepository:
         target = self.vault_root / relative_path
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(content, encoding="utf-8")
+
+    def exists(self, relative_path: str) -> bool:
+        return (self.vault_root / relative_path).exists()

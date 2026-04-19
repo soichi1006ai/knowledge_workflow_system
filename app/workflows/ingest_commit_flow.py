@@ -1,15 +1,10 @@
 from app.schemas.raw import IngestCommitRequest, IngestCommitResponse
+from app.services.commit_service import CommitService
 
 
 class IngestCommitFlow:
+    def __init__(self) -> None:
+        self.commit_service = CommitService()
+
     def run(self, raw_id: str, payload: IngestCommitRequest) -> IngestCommitResponse:
-        return IngestCommitResponse(
-            raw_id=raw_id,
-            source_id="src_generated001",
-            created_page_ids=["pg_generated001"],
-            updated_page_ids=[],
-            created_decision_ids=[],
-            created_question_ids=[],
-            created_action_ids=[],
-            message="ingest committed (stub)",
-        )
+        return self.commit_service.commit(raw_id, payload)
